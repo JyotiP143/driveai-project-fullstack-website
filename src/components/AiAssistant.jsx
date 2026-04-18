@@ -137,11 +137,11 @@ export default function AiAssistant() {
 
       const result = await chat.sendMessage(contextualPrompt);
       const responseText = result.response.text();
-
+      
       const reply = parseAndApplyResponse(responseText);
 
       setMessages(prev => [...prev, { role: 'assistant', text: reply }]);
-
+      
     } catch (error) {
       console.error(error);
       setMessages(prev => [...prev, { role: 'assistant', text: "Sorry, I had trouble processing that request." }]);
@@ -152,7 +152,7 @@ export default function AiAssistant() {
 
   if (!isOpen) {
     return (
-      <button
+      <button 
         onClick={() => setIsOpen(true)}
         className="fixed bottom-6 right-6 w-14 h-14 bg-accent-color text-black rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(0,255,204,0.4)] hover:scale-110 transition-transform z-50 animate-bounce"
       >
@@ -176,34 +176,35 @@ export default function AiAssistant() {
       <div className="flex-1 p-4 overflow-y-auto max-h-96 min-h-[300px] flex flex-col gap-3 space-y-2">
         {messages.map((msg, idx) => (
           <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`max-w-[85%] rounded-2xl px-4 py-2 ${msg.role === 'user' ? 'bg-accent-color text-black rounded-tr-sm'
-                : msg.role === 'system' ? 'bg-red-900/50 text-white border border-red-500/30 w-full'
-                  : 'bg-white/10 text-white rounded-tl-sm'
-              }`}>
-              {msg.text}
-            </div>
+             <div className={`max-w-[85%] rounded-2xl px-4 py-2 ${
+               msg.role === 'user' ? 'bg-accent-color text-black rounded-tr-sm' 
+               : msg.role === 'system' ? 'bg-red-900/50 text-white border border-red-500/30 w-full' 
+               : 'bg-white/10 text-white rounded-tl-sm'
+             }`}>
+                {msg.text}
+             </div>
           </div>
         ))}
         {loading && (
           <div className="flex justify-start">
-            <div className="bg-white/10 text-text-muted rounded-2xl rounded-tl-sm px-4 py-2 flex items-center gap-2">
-              <Loader2 size={14} className="animate-spin" /> Thinking...
-            </div>
+             <div className="bg-white/10 text-text-muted rounded-2xl rounded-tl-sm px-4 py-2 flex items-center gap-2">
+                <Loader2 size={14} className="animate-spin" /> Thinking...
+             </div>
           </div>
         )}
         <div ref={messagesEndRef} />
       </div>
 
       <form onSubmit={handleSend} className="p-3 bg-[#1a1a1a] border-t border-border-color flex gap-2">
-        <input
-          type="text"
+        <input 
+          type="text" 
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask me to show cars, compare, etc..."
           className="flex-1 bg-black border border-border-color focus:border-accent-color text-white rounded-xl px-4 py-2 focus:outline-none placeholder:text-gray-600"
         />
-        <button
-          type="submit"
+        <button 
+          type="submit" 
           disabled={!input.trim() || loading}
           className="bg-accent-color text-black w-10 h-10 rounded-xl flex items-center justify-center shrink-0 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#1affd1] transition-colors"
         >

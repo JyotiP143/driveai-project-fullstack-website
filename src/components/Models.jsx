@@ -1,91 +1,88 @@
-import React from 'react';
+import { ArrowRight, Gauge, Zap } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 import { cars, formatPrice } from '../data/cars';
-import { Car, Zap, Gauge } from 'lucide-react';
 
 export default function Models() {
   const { state, dispatch } = useAppContext();
-  const { modelFilter, currency, highlightedElement } = state;
-
-  const filteredCars = cars.filter(car => {
-    if (modelFilter.type !== 'All' && car.type !== modelFilter.type) return false;
-    // Check max price after converting appropriately if needed, or assume maxPrice is in INR
-    // For simplicity, modelFilter.maxPrice will be loosely matched, or handled locally here.
-    const priceLimit = modelFilter.maxPrice || Infinity;
-    return car.price.INR <= priceLimit;
-  });
+  const { currency } = state;
 
   return (
-    <section id="models" className={`bg-bg-color-alt ${highlightedElement === 'models' ? 'ai-highlight ai-focus' : ''}`}>
-      <div className="container">
-        <div className="section-header">
-          <h2 className="text-4xl text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">Our Lineup</h2>
-          <p>Discover the perfect vehicle for your lifestyle. Engineered for performance, designed for comfort.</p>
-        </div>
+    <section id="models" className="bg-black py-24">
+      <div className="container space-y-32">
 
-        <div className="flex flex-wrap gap-4 justify-center mb-12">
-          {['All', 'Sedan', 'SUV', 'Luxury SUV', 'Sports'].map(type => (
-            <button
-              key={type}
-              className={`px-6 py-2 rounded-full border border-border-color transition-all ${modelFilter.type === type ? 'bg-text-main text-bg-color' : 'hover:bg-white/10'}`}
-              onClick={() => dispatch({ type: 'SET_FILTER', payload: { type } })}
-            >
-              {type}
-            </button>
-          ))}
-        </div>
+        {cars.map((car, index) => {
+          const isReverse = index % 2 !== 0;
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredCars.map(car => (
-            <div 
-              key={car.id} 
-              id={`model-${car.id}`}
-              className={`glass-panel overflow-hidden group ${highlightedElement === `model-${car.id}` ? 'ai-highlight ai-focus' : ''}`}
+          return (
+            <div
+              key={car.id}
+              className={`grid md:grid-cols-2 gap-12 items-center`}
             >
-              <div className="h-64 overflow-hidden relative">
-                <img src={car.image} alt={car.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-sm font-medium">
+
+              {/* IMAGE */}
+              <div
+                className={`relative group ${isReverse ? 'md:order-2' : ''
+                  }`}
+              >
+                <div className="overflow-hidden rounded-2xl">
+                  <img
+                    src={car.image}
+                    alt={car.name}
+                    className="w-full h-[400px] object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                </div>
+
+                {/* glow */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition"></div>
+              </div>
+
+              {/* CONTENT */}
+              <div className={`${isReverse ? 'md:order-1' : ''}`}>
+
+                <p className="text-sm uppercase tracking-widest text-gray-400 mb-3">
                   {car.type}
-                </div>
-              </div>
-              <div className="p-6">
-                <div className="flex justify-between items-end mb-2">
-                  <h3 className="text-2xl">{car.name}</h3>
-                  <span className="text-accent font-semibold">{formatPrice(car.price, currency)}</span>
-                </div>
-                <p className="text-text-muted mb-6">{car.tagline}</p>
-                
-                <div className="grid grid-cols-2 gap-4 mb-6">
+                </p>
+
+                <h2 className="text-4xl md:text-5xl font-bold mb-4">
+                  {car.name}
+                </h2>
+
+                <p className="text-gray-400 mb-6 max-w-md">
+                  {car.tagline}
+                </p>
+
+                {/* SPECS */}
+                <div className="flex gap-6 mb-6 text-sm">
                   <div className="flex items-center gap-2">
-                    <Zap size={18} className="text-accent" />
-                    <span className="text-sm">{car.range} km range</span>
+                    <Zap size={18} className="text-white" />
+                    {car.range} km range
                   </div>
                   <div className="flex items-center gap-2">
-                    <Gauge size={18} className="text-accent" />
-                    <span className="text-sm">{car.acceleration}s 0-100</span>
+                    <Gauge size={18} className="text-white" />
+                    {car.acceleration}s 0-100
                   </div>
                 </div>
 
-                <div className="flex gap-3">
-                  <button 
-                    onClick={() => {
-                        dispatch({ type: 'SET_BOOKING_DETAILS', payload: { model: car.id } });
-                        document.getElementById('booking').scrollIntoView({ behavior: 'smooth' });
-                    }}
-                    className="flex-1 btn-primary text-sm py-2"
-                  >
-                    Test Drive
-                  </button>
-                </div>
+                {/* PRICE */}
+                <p className="text-xl font-semibold mb-6 text-gray-200">
+                  {formatPrice(car.price, currency)}
+                </p>
+
+                {/* CTA */}
+                <button
+                  onClick={() => {
+                    dispatch({ type: 'SET_BOOKING_DETAILS', payload: { model: car.id } });
+                    document.getElementById('booking').scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-black text-sm font-semibold hover:bg-gray-200 transition"
+                >
+                  Book Test Drive
+                  <ArrowRight size={16} />
+                </button>
               </div>
             </div>
-          ))}
-          {filteredCars.length === 0 && (
-            <div className="col-span-full text-center py-12 text-text-muted">
-              No models found matching your criteria.
-            </div>
-          )}
-        </div>
+          );
+        })}
       </div>
     </section>
   );

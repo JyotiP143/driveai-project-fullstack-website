@@ -1,4 +1,3 @@
-import React from 'react';
 import { useAppContext } from '../context/AppContext';
 import { cars } from '../data/cars';
 
@@ -10,45 +9,91 @@ export default function Comparison() {
   const model2 = cars.find(c => c.id === comparisonModels[1]) || cars[1];
 
   return (
-    <section id="comparison" className={`bg-bg-color ${highlightedElement === 'comparison' ? 'ai-highlight ai-focus' : ''}`}>
-      <div className="container">
-        <div className="section-header">
-          <h2 className="text-4xl text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">Head to Head</h2>
-          <p>Compare our leading models to find your perfect match.</p>
+    <section
+      id="comparison"
+      className={`relative py-20 bg-gradient-to-b from-black via-[#0a0a0f] to-black ${
+        highlightedElement === 'comparison' ? 'ai-highlight ai-focus' : ''
+      }`}
+    >
+      {/* 🔥 Glow Background */}
+      <div className="absolute inset-0">
+        <div className="absolute w-[400px] h-[400px] bg-blue-500/20 blur-[120px] rounded-full top-[-100px] left-[-100px]"></div>
+        <div className="absolute w-[400px] h-[400px] bg-purple-500/20 blur-[120px] rounded-full bottom-[-100px] right-[-100px]"></div>
+      </div>
+
+      <div className="container relative z-10 mx-auto px-6">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <h2 className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-300 to-gray-500 mb-4">
+            Head to Head
+          </h2>
+          <p className="text-gray-400">
+            Compare our leading models to find your perfect match.
+          </p>
         </div>
 
-        <div className="glass-panel overflow-x-auto rounded-3xl p-8">
-          <table className="w-full text-left border-collapse min-w-[600px]">
-            <thead>
-              <tr className="border-b border-border-color">
-                <th className="p-4 text-text-muted font-medium w-1/3">Specification</th>
-                <th className="p-4 text-xl font-semibold w-1/3 text-center">{model1.name}</th>
-                <th className="p-4 text-xl font-semibold w-1/3 text-center">{model2.name}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td className="p-4 border-b border-border-color/50 text-text-muted">Category</td>
-                <td className="p-4 border-b border-border-color/50 text-center">{model1.type}</td>
-                <td className="p-4 border-b border-border-color/50 text-center">{model2.type}</td>
-              </tr>
-              <tr>
-                <td className="p-4 border-b border-border-color/50 text-text-muted">Range (EPA Est.)</td>
-                <td className="p-4 border-b border-border-color/50 text-center">{model1.range} km</td>
-                <td className="p-4 border-b border-border-color/50 text-center">{model2.range} km</td>
-              </tr>
-              <tr>
-                <td className="p-4 border-b border-border-color/50 text-text-muted">Acceleration (0-100 km/h)</td>
-                <td className="p-4 border-b border-border-color/50 text-center">{model1.acceleration}s</td>
-                <td className="p-4 border-b border-border-color/50 text-center">{model2.acceleration}s</td>
-              </tr>
-              <tr>
-                <td className="p-4 border-b border-border-color/50 text-text-muted">Top Speed</td>
-                <td className="p-4 border-b border-border-color/50 text-center">{model1.topSpeed} km/h</td>
-                <td className="p-4 border-b border-border-color/50 text-center">{model2.topSpeed} km/h</td>
-              </tr>
-            </tbody>
-          </table>
+        {/* Table */}
+        <div className="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-xl overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left min-w-[600px]">
+              
+              {/* Header */}
+              <thead className="bg-white/5 backdrop-blur-md">
+                <tr className="border-b border-white/10">
+                  <th className="p-5 text-gray-400 font-medium">
+                    Specification
+                  </th>
+                  <th className="p-5 text-center text-white text-lg font-semibold">
+                    {model1.name}
+                  </th>
+                  <th className="p-5 text-center text-white text-lg font-semibold">
+                    {model2.name}
+                  </th>
+                </tr>
+              </thead>
+
+              {/* Body */}
+              <tbody>
+                {[
+                  {
+                    label: "Category",
+                    v1: model1.type,
+                    v2: model2.type,
+                  },
+                  {
+                    label: "Range",
+                    v1: `${model1.range} km`,
+                    v2: `${model2.range} km`,
+                  },
+                  {
+                    label: "Acceleration",
+                    v1: `${model1.acceleration}s`,
+                    v2: `${model2.acceleration}s`,
+                  },
+                  {
+                    label: "Top Speed",
+                    v1: `${model1.topSpeed} km/h`,
+                    v2: `${model2.topSpeed} km/h`,
+                  },
+                ].map((row, i) => (
+                  <tr
+                    key={i}
+                    className="border-b border-white/5 hover:bg-white/5 transition"
+                  >
+                    <td className="p-5 text-gray-400">{row.label}</td>
+
+                    <td className="p-5 text-center text-white font-medium">
+                      {row.v1}
+                    </td>
+
+                    <td className="p-5 text-center text-white font-medium">
+                      {row.v2}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </section>

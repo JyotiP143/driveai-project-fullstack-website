@@ -1,4 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
   --bg-color: #050505;
@@ -30,7 +33,12 @@ body {
   scroll-behavior: smooth;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-display);
   font-weight: 600;
   letter-spacing: -0.02em;
@@ -49,8 +57,13 @@ button {
 }
 
 /* Typography Utilities */
-.text-accent { color: var(--accent-color); }
-.text-muted { color: var(--text-muted); }
+.text-accent {
+  color: var(--accent-color);
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
 
 /* Layout */
 .container {
@@ -130,9 +143,17 @@ section {
 
 /* Animations */
 @keyframes pulseHighlight {
-  0% { box-shadow: 0 0 0 0 var(--accent-glow); }
-  50% { box-shadow: 0 0 0 20px rgba(0, 255, 204, 0); }
-  100% { box-shadow: 0 0 0 0 var(--accent-glow); }
+  0% {
+    box-shadow: 0 0 0 0 var(--accent-glow);
+  }
+
+  50% {
+    box-shadow: 0 0 0 20px rgba(0, 255, 204, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 var(--accent-glow);
+  }
 }
 
 .ai-highlight {
