@@ -155,36 +155,49 @@ export default function AiAssistant() {
     setMessages((prev) => [...prev, { role: "user", text: userMessage }]);
     setLoading(true);
 
-    try {
-      const model = genAI.getGenerativeModel({
-  model: "gemini-2.0-flash"
-});
+   try {
+  const model = genAI.getGenerativeModel({
+    model: "gemini-2.0-flash"
+  });
 
-   const chatHistory = messages
-  .slice(1) // 👈 skip first assistant message
-  .map(m => ({
-    role: m.role === 'assistant' ? 'model' : 'user',
-    parts: [{ text: m.text }]
-  }))
-        .filter((m) => m.role === "model" || m.role === "user");
+  const chatHistory = messages
+    .slice(1)
+    .map(m => ({
+      role: m.role === 'assistant' ? 'model' : 'user',
+      parts: [{ text: m.text }]
+    }));
 
-      const chat = model.startChat({ history: chatHistory });
-
-      // Inject current state context subtly
-      const contextualPrompt = `
+  // Inject system + UI state + user input
+  const contextualPrompt = `
 ${systemInstruction}
 
 [Current UI State: Currency=${state.currency}, Filter=${state.modelFilter.type}]
 
 User Request: ${userMessage}
 `;
-      const result = await chat.sendMessage(contextualPrompt);
-      const responseText = result.response.text();
 
-      const reply = parseAndApplyResponse(responseText);
+  const result = await model.generateContent({
+    contents: [
+      ...chatHistory,
+      {
+        role: "user",
+        parts: [{ text: contextualPrompt }]
+      }
+    ]
+  });
 
-      setMessages((prev) => [...prev, { role: "assistant", text: reply }]);
-    } catch (error) {
+  const responseText =
+    result.response.candidates?.[0]?.content?.parts?.[0]?.text || "";
+
+  const reply = parseAndApplyResponse(responseText);
+
+  setMessages(prev => [
+    ...prev,
+    { role: "assistant", text: reply }
+  ]);
+
+} 
+    catch (error) {
       console.error("FULL ERROR:", error); // 👈 add this
 
       setMessages((prev) => [
