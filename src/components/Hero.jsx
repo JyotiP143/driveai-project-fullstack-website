@@ -19,7 +19,6 @@ export default function Hero() {
           loop
           playsInline
           className="w-full h-full object-cover opacity-50 scale-105"
-          poster="https://images.unsplash.com/photo-1614200187524-dc4b892acf16?auto=format&fit=crop&q=80&w=2000"
         >
           <source src="/video/car-video.mp4" type="video/mp4" />
         </video>
