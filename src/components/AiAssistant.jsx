@@ -53,40 +53,61 @@ export default function AiAssistant() {
     scrollToBottom();
   }, [messages]);
 
-  const executeAction = (action) => {
-    console.log("Executing Action:", action);
-    switch (action.type) {
-      case 'scroll':
-        const el = document.getElementById(action.target);
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
-        break;
-      case 'highlight':
-        dispatch({ type: 'SET_HIGHLIGHT', payload: action.target });
-        setTimeout(() => dispatch({ type: 'CLEAR_HIGHLIGHT' }), 3000);
-        break;
-      case 'filter':
-        dispatch({ type: 'SET_FILTER', payload: { type: action.category || 'All', maxPrice: action.maxPrice || Infinity } });
-        break;
-      case 'compare':
-        if (action.models && action.models.length >= 2) {
-          dispatch({ type: 'SET_COMPARISON_MODELS', payload: action.models });
-        }
-        break;
-      case 'book':
-        const details = {};
-        if (action.model) details.model = action.model;
-        if (action.city) details.city = action.city;
-        if (action.date) details.date = action.date;
-        dispatch({ type: 'SET_BOOKING_DETAILS', payload: details });
-        break;
-      case 'currency':
-        if (action.value === 'INR' || action.value === 'USD') {
-          dispatch({ type: 'SET_CURRENCY', payload: action.value });
-        }
-        break;
-    }
-  };
+const executeAction = (action) => {
+  console.log("Executing Action:", action);
 
+  switch (action.type) {
+    case 'scroll': {
+      const el = document.getElementById(action.target);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+      break;
+    }
+
+    case 'highlight': {
+      dispatch({ type: 'SET_HIGHLIGHT', payload: action.target });
+      setTimeout(() => dispatch({ type: 'CLEAR_HIGHLIGHT' }), 3000);
+      break;
+    }
+
+    case 'filter': {
+      dispatch({
+        type: 'SET_FILTER',
+        payload: {
+          type: action.category || 'All',
+          maxPrice: action.maxPrice || Infinity
+        }
+      });
+      break;
+    }
+
+    case 'compare': {
+      if (action.models && action.models.length >= 2) {
+        dispatch({ type: 'SET_COMPARISON_MODELS', payload: action.models });
+      }
+      break;
+    }
+
+    case 'book': {
+      const details = {};
+      if (action.model) details.model = action.model;
+      if (action.city) details.city = action.city;
+      if (action.date) details.date = action.date;
+
+      dispatch({ type: 'SET_BOOKING_DETAILS', payload: details });
+      break;
+    }
+
+    case 'currency': {
+      if (action.value === 'INR' || action.value === 'USD') {
+        dispatch({ type: 'SET_CURRENCY', payload: action.value });
+      }
+      break;
+    }
+
+    default:
+      break;
+  }
+};
   const parseAndApplyResponse = (text) => {
     try {
       // Remove any potential markdown json block formatting
